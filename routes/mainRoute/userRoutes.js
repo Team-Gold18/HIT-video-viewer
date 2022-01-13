@@ -4,7 +4,7 @@ const routes = require('express').Router();
 var UserController = require('../../controllers/user.controller');
 
 
-
+//create new user
 routes.post('/createUser',  UserController.AddUser);
 
 routes.get('/getAllUsers',  UserController.getAllUser);
