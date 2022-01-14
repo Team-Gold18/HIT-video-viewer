@@ -30,3 +30,4 @@ var subcategorySchema = new Schema({
 });
 
 module.exports = mongoose.model("Subcategories", subcategorySchema);
+//sample comment
