@@ -1,6 +1,7 @@
 const routes = require('express').Router();
 
 const userRoute = require('./mainRoute/userRoutes');
+const likeRoute = require('./mainRoute/likeRoute');
 /*const videoRoute = require('./mainRoute/videoRoutes');
 const likeRoute = require('./mainRoute/likeRoutes');
 const commentRoute = require('./mainRoute/commentRoute');
@@ -8,6 +9,7 @@ const categoryRoute = require('./mainRoute/categoryRoute');
 const subcategoryRoute = require('./mainRoute/subcategoryRoute');*/
 
 routes.use('/user', userRoute);
+routes.use('/like', likeRoute);
 /*routes.use('/video', videoRoute);
 routes.use('/like', likeRoute);
 routes.use('/comment', commentRoute);

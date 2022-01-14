@@ -55,7 +55,7 @@ exports.getUser = function(req, res) {
 
 exports.updateUser = function(req, res) {
     const id =req.params.id;
-    User.findOne({ email : req.body.email}, (error, user) =>{
+    User.findOne({   : req.body.email}, (error, user) =>{
       if(error){
         console.log(error)
       }
