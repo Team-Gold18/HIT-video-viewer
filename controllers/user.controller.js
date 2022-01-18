@@ -12,6 +12,8 @@ exports.getAllUser = function (req, res) {
 };
 //user control
 //login part and registration
+
+//new part add login  and registration
 exports.loginUser = function (req, res) {
   var userData = req.body;
 
