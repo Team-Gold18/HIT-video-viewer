@@ -42,6 +42,7 @@ exports.getVideo = function (req, res) {
   });
 };
 
+//title: req.body.title
 exports.updateVideo = function (req, res) {
   const id = req.params.id;
   Video.findOne({ title: req.body.title }, (error, video) => {
