@@ -34,6 +34,7 @@ exports.loginUser = function (req, res) {
   });
 };
 
+//add user updated
 exports.AddUser = function (req, res) {
   let userData = req.body;
 
