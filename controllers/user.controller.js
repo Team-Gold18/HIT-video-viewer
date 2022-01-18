@@ -10,7 +10,8 @@ exports.getAllUser = function (req, res) {
     res.json({ status: true, data: users });
   });
 };
-
+//user control
+//login part and registration
 exports.loginUser = function (req, res) {
   var userData = req.body;
 
