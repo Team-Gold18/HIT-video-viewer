@@ -1,54 +1,48 @@
+var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
 
+var VideoSchema = new Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  link: {
+    type: String,
+    required: true,
+  },
 
-const mongoose = require("mongoose"),
-  { Schema } = mongoose,
-  VideoSchema = new Schema(
+  likes: [
     {
-      name: {
-        type: String,
-        required: true,
-      },
-      url: {
-        type: String,
-      },
-      
-      id: {
-        type: String,
-        unique: true,
-      },
-      likes: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "Likes",
-        },
-      ],
+      type: Schema.Types.ObjectId,
+      ref: "Likes",
+    },
+  ],
 
-      comments: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "Comments",
-        },
-      ],
-    
-      subcategories: {
-        type: Schema.Types.ObjectId,
-        ref: "Subcategories",
-      },
-      uploadedBy: {
-        type: Schema.Types.ObjectId,
-        ref: "Users",
-      },
-      watchedBy: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "Users",
-        },
-      ],
-    },
-    
+  comments: [
     {
-      timestamps: true,
+      type: Schema.Types.ObjectId,
+      ref: "Comments",
     },
-    
-  );
-module.exports = mongoose.model("Video", VideoSchema);
+  ],
+
+  subcategories: {
+    type: Schema.Types.ObjectId,
+    ref: "Subcategories",
+  },
+  uploadedBy: {
+    type: Schema.Types.ObjectId,
+    ref: "Users",
+  },
+  watchedBy: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Users",
+    },
+  ],
+});
+
+module.exports = mongoose.model("Videos", VideoSchema);
