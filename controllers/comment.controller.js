@@ -2,6 +2,7 @@ const Comment = require('../models/comment')
 //const User = require("../models/user");
 
 exports.getAllComment = function (req, res) {
+    
     Comment.find({}, function (err, comments) {
         if (err) {
             res.json({ status: false, data: 'Invalid Request!' });
@@ -11,7 +12,7 @@ exports.getAllComment = function (req, res) {
     });
 };
 
-
+//updated
 exports.AddComment = function (req, res) {
     let commentData = req.body;
         
