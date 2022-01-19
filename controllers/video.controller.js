@@ -11,6 +11,7 @@ exports.getAllVideo = function (req, res) {
   });
 };
 // video controller 
+// video controller  new
 exports.create = function (req, res, next)  {
     let test = {
       name: req.files[0].originalname,
