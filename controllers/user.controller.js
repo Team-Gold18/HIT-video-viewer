@@ -1,68 +1,82 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const bcrypt = require('bcryptjs');
+const { registerValidation, loginValidation } = require('../validation');
 
-exports.getAllUser = function (req, res) {
-  User.find({}, function (err, users) {
-    if (err) {
-      res.json({ status: false, data: "Invalid Request!" });
-    }
+// User Registration with validations
+exports.AddUser = async function (req, res) {
 
-    res.json({ status: true, data: users });
+  //validate data before we make new user
+  const { error } = registerValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+
+  //check user already avalible
+  const emailExist = await User.findOne({ email: req.body.email });
+  if (emailExist) return res.status(400).send('Email already avaliable');
+
+  //hash pwd
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+  //create new user
+  const user = new User({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    contactNumber: req.body.contactNumber,
+    isAdmin: req.body.isAdmin,
+    email: req.body.email,
+    password: hashedPassword
   });
-};
-//user control
-//login part and registration
+  try {
+    const savedUser = await user.save();
+    //res.send({ user: user._id });
+    res.status(200).send(savedUser);
 
-//new part add login  and registration
-exports.loginUser = function (req, res) {
-  var userData = req.body;
-
-  User.findOne({ email: userData.email }, (error, user) => {
-    if (error) {
-      console.log(error);
-    } else if (!user) {
-      res.status(401).send("Invalid email");
-    } else if (user.password !== userData.password) {
-      res.status(401).send("Invalid password");
-    } else {
-     
-      let payload = { subject: user._id };
-      let token = jwt.sign(payload, "secretKey");
-      res.status(200).send({ token });
-      
-    }
-  });
+  } catch (err) {
+    res.status(400).send(err);
+  }
 };
 
-//add user updated
-exports.AddUser = function (req, res) {
-  let userData = req.body;
+//User login with validations
+exports.loginUser = async function (req, res) {
 
-  User.findOne({ email: req.body.email }, (error, user) => {
-    if (error) {
-      console.log(error);
-    } else if (!user) {
-      let user = new User(userData);
-      user.save((error, registeredUser) => {
-        if (error) {
-          console.log(error);
-        } else {
-          let payload = { subject: registeredUser._id };
-          let token = jwt.sign(payload, "secretKey");
-          res.status(200).send({ token, user });
-        }
-      });
-    } else {
-      console.log("email Already exists");
-      res.json({ status: false, data: "email Already exists!" });
-    }
-  });
+  const { error } = loginValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  //check user email already avalible
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) return res.status(400).send('Email is not found..');
+
+  //check is password is correct
+  const validPass = await bcrypt.compare(req.body.password, user.password);
+  if (!validPass) return res.status(400).send('Invalid password');
+
+  //create and assing token
+  const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
+  res.header('auth-token', token).send(token);
+
+  res.send('Logged in!');
+
 };
+
+
+
 
 exports.getUser = function (req, res) {
   User.findById(req.params.id, function (err, users) {
     if (err) {
       res.json({ status: false, data: "Invalid ID!" });
+    }
+
+    res.json({ status: true, data: users });
+  });
+};
+
+exports.getAllUser = function (req, res) {
+  User.find({}, function (err, users) {
+    if (err) {
+      res.json({ status: false, data: "Invalid Request!" });
     }
 
     res.json({ status: true, data: users });
