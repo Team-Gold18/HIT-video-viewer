@@ -23,5 +23,26 @@ const loginValidation = data => {
 };
 
 
+//category
+const categoryValidation = data => {
+    const schema = Joi.object({
+        title: Joi.string().min(2).required(),
+        description: Joi.string().min(6).required()
+    });
+    return schema.validate(data);
+};
+
+//subcategory
+const subcategoryValidation = data => {
+    const schema = Joi.object({
+        title: Joi.string().min(2).required(),
+        description: Joi.string().min(6).required()
+    });
+    return schema.validate(data);
+};
+
+
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
+module.exports.categoryValidation = categoryValidation;
+module.exports.subcategoryValidation = categoryValidation;

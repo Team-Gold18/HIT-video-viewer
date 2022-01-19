@@ -1,4 +1,5 @@
 const Subcategory = require("../models/subcategory");
+const {subcategoryValidation} = require('../validation');
 
 
 exports.getAllSubcategory = function (req, res) {
@@ -16,6 +17,10 @@ exports.getAllSubcategory = function (req, res) {
 
 exports.AddSubcategory = function (req, res) {
     let categoryData = req.body;
+    
+    const { error } = subcategoryValidation(categoryData);
+    if (error) return res.status(400).send(error.details[0].message);
+
     Subcategory.findOne({ title: req.body.title }, (error, subcategory) => {
         if (error) {
             console.log(error)
@@ -55,6 +60,11 @@ exports.getSubcategory = function (req, res) {
 
 exports.updateSubcategory = function (req, res) {
     const id = req.params.id;
+
+    const { error } = subcategoryValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+
     Subcategory.findOne({ title: req.body.title }, (error, subcategory) => {
         if (error) {
             console.log(error)

@@ -1,4 +1,5 @@
 const Category = require("../models/category");
+const {categoryValidation} = require('../validation');
 
 
 exports.getAllCategory = function (req, res) {
@@ -16,6 +17,10 @@ exports.getAllCategory = function (req, res) {
 
 exports.AddCategory = function (req, res) {
     let categoryData = req.body;
+
+    const { error } = categoryValidation(categoryData);
+    if (error) return res.status(400).send(error.details[0].message);
+
     Category.findOne({ title: req.body.title }, (error, category) => {
         if (error) {
             console.log(error)
@@ -55,6 +60,10 @@ exports.getCategory = function (req, res) {
 
 exports.updateCategory = function (req, res) {
     const id = req.params.id;
+    
+    const { error } = categoryValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
     Category.findOne({ title: req.body.title }, (error, category) => {
         if (error) {
             console.log(error)
