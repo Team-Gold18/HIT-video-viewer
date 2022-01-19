@@ -1,4 +1,5 @@
 const Video = require('../models/video');
+const   cloud = require("../utils/cloudinary");
 
 exports.getAllVideo = function (req, res) {
   Video.find({}, function (err, videos) {
@@ -10,27 +11,57 @@ exports.getAllVideo = function (req, res) {
   });
 };
 
-exports.AddVideo = function (req, res) {
-  let videoData = req.body;
-  Video.findOne({ title: req.body.title }, (error, video) => {
-    if (error) {
-      console.log(error);
-    } else if (!video) {
-      let AddVideo = new Video(videoData);
 
-      AddVideo.save(function (err, videos) {
-        if (err) {
-          res.json({ status: false, data: 'Unable to add!' });
-        }
-        console.log(videos);
-        res.json({ status: true, data: videos });
-      });
-    } else {
-      console.log('Video title name Already exists');
-      res.json({ status: false, data: 'Video title Already exists!' });
-    }
-  });
-};
+
+
+
+exports.create = function (req, res, next)  {
+    // First check if the file exists in the Database
+    let test = {
+      name: req.files[0].originalname,
+      url: req.files[0].path,
+      id: "",
+    };
+    console.log(req.files[0].originalname);
+    Video.find({ name: test.name }, (err, cb) => {
+      if (err) {
+        res.json({
+          error: true,
+          message: `There was a problem uploading the video because: ${err.message}`,
+        });
+      } else {
+        let file = {
+          name: req.files[0].originalname,
+          url: req.files[0].path,
+          id: "",
+        };
+        cloud
+          .uploads(file.url)
+          .then((result) => {
+            Video.create({
+              name: req.files[0].originalname,
+              url: result.url,
+              id: result.id,
+            });
+          })
+          .then((result) => {
+            res.json({
+              success: true,
+              data: result,
+            });
+          })
+          .catch((err) => {
+            res.json({
+              error: true,
+              message: err.message,
+            });
+          });
+      }
+    });
+  }
+
+
+
 
 exports.getVideo = function (req, res) {
   Video.findById(req.params.id, function (err, videos) {
@@ -42,10 +73,9 @@ exports.getVideo = function (req, res) {
   });
 };
 
-//title: req.body.title
 exports.updateVideo = function (req, res) {
   const id = req.params.id;
-  Video.findOne({ title: req.body.title }, (error, video) => {
+  Video.findOne({ name: req.body.name }, (error, video) => {
     if (error) {
       console.log(error);
     } else if (!video || (video && video.id == id)) {
@@ -61,11 +91,28 @@ exports.updateVideo = function (req, res) {
         }
       );
     } else {
-      console.log('Video title Already exists');
-      res.json({ status: false, data: 'Title Already exists!' });
+      console.log('Video name Already exists');
+      res.json({ status: false, data: 'name Already exists!' });
     }
   });
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 exports.deleteVideo = function (req, res) {
   Video.remove({ _id: req.params.id }, function (err, videos) {
