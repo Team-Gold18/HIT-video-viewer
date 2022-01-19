@@ -12,7 +12,7 @@ const subcategoryRoute = require('./mainRoute/subcategoryRoute');
 routes.use('/user', userRoute);
 routes.use('/comment', verify, commentRoute);
 routes.use('/like', verify, likeRoute);
-routes.use('/video', verify, videoRoute);
+routes.use('/video', videoRoute);
 routes.use('/category', verify, categoryRoute);
 routes.use('/subcategory', verify, subcategoryRoute);
 
