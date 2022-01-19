@@ -2,6 +2,10 @@ var express = require('express');
 const cors = require('cors');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 const url = 'mongodb://localhost/NewVideoDB'
 var app =express();
 app.use(express.json())
