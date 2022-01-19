@@ -12,7 +12,7 @@ exports.getAllComment = function (req, res) {
     });
 };
 
-
+//updated
 exports.AddComment = function (req, res) {
     let commentData = req.body;
         
