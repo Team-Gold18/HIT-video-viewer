@@ -10,24 +10,19 @@ exports.getAllVideo = function (req, res) {
     res.json({ status: true, data: videos });
   });
 };
-
-
-
-
-
+// video controller 
 exports.create = function (req, res, next)  {
-    // First check if the file exists in the Database
     let test = {
       name: req.files[0].originalname,
       url: req.files[0].path,
       id: "",
     };
     console.log(req.files[0].originalname);
-    Video.find({ name: test.name }, (err, cb) => {
+    Video.findOne({ name: test.name }, (err, cb) => {
       if (err) {
         res.json({
           error: true,
-          message: `There was a problem uploading the video because: ${err.message}`,
+          message: 'There was a problem uploading the video',
         });
       } else {
         let file = {
@@ -47,7 +42,9 @@ exports.create = function (req, res, next)  {
           .then((result) => {
             res.json({
               success: true,
+              
               data: result,
+              message:'uploaded successfully'
             });
           })
           .catch((err) => {
@@ -96,23 +93,6 @@ exports.updateVideo = function (req, res) {
     }
   });
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 exports.deleteVideo = function (req, res) {
   Video.remove({ _id: req.params.id }, function (err, videos) {
